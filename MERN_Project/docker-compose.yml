@@ -1,0 +1,27 @@
+services:
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    networks:
+      - my-network   
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      # this backend url will be used by the vite.config.ts file to proxy the requests to the backend container
+      - BACKEND_URL=http://backend:3001
+    networks:
+      - my-network
+    depends_on:
+      - backend
+
+networks:
+  my-network:
+    driver: bridge
